@@ -111,8 +111,8 @@ function displayProfile(user, allData) {
     Account created: ${user.created}
     `;
     document.getElementById('geoguessrProfile').innerHTML = `<a href="https://www.geoguessr.com/${user.url}" target="_blank">Geoguessr Profile</a>`;
-    document.getElementById('profileImage').src = `${window.location.origin}/geoguessr_profile_pictures/${user.pinUrl.replace(/^pin\//, '')}`;
-    document.getElementById('divisionImage').src = `${window.location.origin}/division_icons/${user.divisionName}.webp`;
+    document.getElementById('profileImage').src = `./geoguessr_profile_pictures/${user.pinUrl.replace(/^pin\//, '')}`;
+    document.getElementById('divisionImage').src = `./division_icons/${user.divisionName}.webp`;
     document.getElementById('leaderboardPosition').innerHTML = `
         <div class="leaderboard-line">${globalEmoji}&nbsp;Rating:&nbsp;<span class="highlight">${user.rating}</span>&nbsp;(${user.divisionName})</div>
         <div class="leaderboard-line">${globalEmoji}&nbsp;Global Rank&nbsp;<span class="highlight">${user.positionDuelsLeaderboard}</span>&nbsp;of&nbsp;${allData.length}</div>
