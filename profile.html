@@ -18,7 +18,7 @@
     <div class="profile-container">
         <div class="container">
             <div class="profile-row">
-                <img id="profileImage" src="./geoguessr_profile_pictures/${user.pinUrl.replace(/^pin\//, '')}" alt="Profile Image"/>
+                <img id="profileImage" src="./geoguessr_profile_pictures/${user.pinUrl.replace(/^pin\//, '')}" alt="Profile Image" onerror="this.onerror=null;this.src='./geoguessr_profile_pictures/default.png';"/>
                 <h1 id="username"></h1>
                 <p id="geoguessrProfile"></p>
             </div>
