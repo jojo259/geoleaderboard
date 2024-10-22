@@ -117,7 +117,7 @@ function displayProfile(user, allData) {
     document.getElementById('divisionImage').src = `./division_icons/${user.divisionName}.webp`;
     document.getElementById('leaderboardPosition').innerHTML = `
         <div class="leaderboard-line">${globalEmoji}&nbsp;Rating:&nbsp;<span class="highlight">${user.rating}</span>&nbsp;(${user.divisionName})</div>
-        <div class="leaderboard-line">${globalEmoji}&nbsp;Global Rank&nbsp;<span class="highlight">${user.positionDuelsLeaderboard}</span>&nbsp;of&nbsp;${allData.length}</div>
+        <div class="leaderboard-line">${globalEmoji}&nbsp;Global Rank&nbsp;<span class="highlight">${user.positionDuelsLeaderboard}</span>&nbsp;of&nbsp;${allData.length - 1}</div>
         <div class="leaderboard-line">${countryEmoji}&nbsp;Rank&nbsp;<span class="highlight">${lbPositionCountry}</span>&nbsp;of&nbsp;${countryPlayers.length}&nbsp;(${user.countryCode})</div>
     `;
     document.getElementById('leaderboardGamemodePosition').innerHTML = leaderboardContent;
