@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileImage = document.getElementById('profileImage');
     if (profileImage) {
         profileImage.onerror = function() {
-            profileImage.src = '/geoguessr_profile_pictures/default.png';
+            profileImage.src = './geoguessr_profile_pictures/default.png';
         };
     }
 });
