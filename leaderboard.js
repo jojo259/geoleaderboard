@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 var h2 = document.createElement("h2");
                 h2.innerHTML = `
                     Total Players on Leaderboard: <span class="highlight">${allDataLength}</span><br>
-                    Data Updated: <span class="highlight">${currentTimeValue} UTC</span> (Data Updates Every 24 Hours)
+                    Data Updated: <span class="highlight">${currentTimeValue} UTC</span> (Updates Every 24 Hours)
                 `;
                 leaderboardContainer.appendChild(h2);
     
