@@ -7,11 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-window.addEventListener('load', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const profileImage = document.getElementById('profileImage');
-    profileImage.onerror = function() {
-        profileImage.src = './geoguessr_profile_pictures/default.png';
-    };
+    if (profileImage) {
+        profileImage.onerror = function() {
+            profileImage.src = '/geoguessr_profile_pictures/default.png';
+        };
+    }
 });
 
 function fetchCSVData(username) {
