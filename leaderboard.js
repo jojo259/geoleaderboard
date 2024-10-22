@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 const rows = data.split('\n');
                 const headers = rows[0].split(',');
-                const allDataLength = rows.length - 1; // minus 1 to exclude the header row
+                const allDataLength = rows.length - 2; // minus 2 to exclude the header row and row at bottom of leaderboard
     
                 const currentTimeIndex = headers.indexOf('current_time');
                 const firstRow = rows[1].split(',');
