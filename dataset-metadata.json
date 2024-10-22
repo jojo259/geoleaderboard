@@ -1,0 +1,21 @@
+{
+    "title": "Geoguessr Leaderboard User Dataset",
+    "id": "mattop/geoguessr-leaderboard-user-data",
+    "licenses": [
+        {
+            "name": "Apache 2.0"
+        }
+    ],
+    "resources": [
+        {
+            "path": "leaderboard.csv",
+            "description": "This file contains user data from the Geoguessr platform."
+        }
+    ],
+    "columns": [
+        {
+            "name": "nick",
+            "description": "nickname"
+        }
+    ]
+}
