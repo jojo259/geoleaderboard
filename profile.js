@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('load', function() {
     const profileImage = document.getElementById('profileImage');
     profileImage.onerror = function() {
-        profileImage.src = './geoguessr_profile_pictures/default.png';
+        profileImage.src = '/geoguessr_profile_pictures/default.png';
     };
 });
 
