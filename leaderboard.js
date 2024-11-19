@@ -33,51 +33,66 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('leaderboard.csv')
             .then(response => response.text())
             .then(data => {
-                const rows = data.split('\n');
-                const headers = rows[0].split(',');
-                const allDataLength = rows.length - 2; // minus 2 to exclude the header row and row at bottom of leaderboard
+                Papa.parse(data, {
+                    header: true, // Assuming the first row is the header
+                    dynamicTyping: true, // Automatically converts numeric values to numbers
+                    skipEmptyLines: true, // Skip empty lines
+                    complete: function(results) {
+                        const rows = results.data;
+                        const headers = results.meta.fields;
     
-                const currentTimeIndex = headers.indexOf('current_time');
-                const firstRow = rows[1].split(',');
-                const currentTimeValue = firstRow[currentTimeIndex];
-
-                // Create and insert <h3> element
-                var leaderboardContainer = document.getElementById("leaderboardContainer");
-                var h2 = document.createElement("h2");
-                h2.innerHTML = `
-                    Total Players on Leaderboard: <span class="highlight">${allDataLength}</span><br>
-                    Data Updated: <span class="highlight">${currentTimeValue} UTC</span> (Updates Every 24 Hours)
-                `;
-                leaderboardContainer.appendChild(h2);
+                        // Clean up headers by trimming whitespace and control characters
+                        const cleanHeaders = headers.map(header => header.trim());
     
-                rows.slice(1).forEach(row => {
-                    const cols = row.split(',');
-                    const tr = document.createElement('tr');
-                    selectedHeaders.forEach((header, i) => {
-                        const index = headers.indexOf(header);
-                        if (index > -1) {
-                            const td = document.createElement('td');
-                            if (i === 1) { // Assume the second column is 'Username'
-                                const username = cols[index];
-                                const link = document.createElement('a');
-                                link.href = `profile.html?username=${encodeURIComponent(username)}`;
-                                link.textContent = username;
-                                link.target = '_blank'; // open in a new tab
-                                td.appendChild(link);
-                            } else {
-                                td.textContent = cols[index];
-                            }
-                            tr.appendChild(td);
-                        } else {
-                            console.error(`Header "${header}" not found in CSV headers`);
-                        }
-                    });
-                    allRows.push(tr); // Save all rows
+                        // Extract and clean up the 'current_time' value from the first data row
+                        const firstRow = rows[0]; // First data row
+                        const currentTimeValue = firstRow['current_time'].trim();
+    
+                        console.log(rows[0]);
+    
+                        // Calculate total number of players on leaderboard
+                        const allDataLength = rows.length;
+    
+                        // Create and insert <h2> element
+                        var leaderboardContainer = document.getElementById("leaderboardContainer");
+                        var h2 = document.createElement("h2");
+                        h2.innerHTML = `
+                            Total Players on Leaderboard: <span class="highlight">${allDataLength}</span><br>
+                            Data Updated: <span class="highlight">${currentTimeValue} UTC</span> (Updates Every 24 Hours)
+                        `;
+                        leaderboardContainer.appendChild(h2);
+    
+                        // Assuming selectedHeaders is defined and contains the headers you want to display
+                        rows.slice(1).forEach(row => {
+                            const tr = document.createElement('tr');
+                            selectedHeaders.forEach((header, i) => {
+                                const index = cleanHeaders.indexOf(header);
+                                if (index > -1) {
+                                    const td = document.createElement('td');
+                                    if (i === 1) { // Assume the second column is 'Username'
+                                        const username = row[header];
+                                        const link = document.createElement('a');
+                                        link.href = `profile.html?username=${encodeURIComponent(username)}`;
+                                        link.textContent = username;
+                                        link.target = '_blank'; // open in a new tab
+                                        td.appendChild(link);
+                                    } else {
+                                        td.textContent = row[header];
+                                    }
+                                    tr.appendChild(td);
+                                } else {
+                                    console.error(`Header "${header}" not found in CSV headers`);
+                                }
+                            });
+                            allRows.push(tr); // Save all rows
+                        });
+    
+                        displayInitialRows();
+                    }
                 });
-                displayInitialRows();
-                loading = false;
-            });
-    }    
+            })
+            .finally(() => loading = false);
+    }
 
     function displayInitialRows() {
         tableBody.innerHTML = '';
