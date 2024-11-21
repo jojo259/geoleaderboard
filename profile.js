@@ -177,6 +177,24 @@ function displayProfile(user, allData) {
     const percentageBattleRoyaleDistanceWinRatio = (battleRoyaleDistanceWinRatio.filter(distance => distance < Number(user.battleRoyaleDistanceWinratio)).length / battleRoyaleDistanceWinRatio.length) * 100;
     const percentageBattleRoyaleCountryWinRatio = (battleRoyaleCountryWinRatio.filter(distance => distance < Number(user.battleRoyaleCountryWinratio)).length / battleRoyaleCountryWinRatio.length) * 100;
 
+    // change cumulative number of games played to number of games played on each day
+    const NumgamesplayedPast14Days = JSON.parse(user.duelsTotalNumgamesplayedPast14Days);
+    const differences = [];
+
+    for (let i = 0; i < NumgamesplayedPast14Days.length; i++) {
+        if (i < 1) {
+            differences.push(NumgamesplayedPast14Days[i]);
+        }
+        else {
+            const current = NumgamesplayedPast14Days[i];
+            const previous = NumgamesplayedPast14Days[i - 1];
+            const difference = current - previous;
+            differences.push(difference);
+        }
+    }
+
+    user.duelsTotalNumgamesplayedPast14DaysDifferences = JSON.stringify(differences);
+
     // create histograms
     createHistogram(
         "ratingsHistogram", Number(user.rating), Number(user.positionDuelsLeaderboard), 
@@ -187,6 +205,20 @@ function displayProfile(user, allData) {
         "countryRatingsHistogram", Number(user.rating), Number(lbPositionCountry), 
         countryRatings, user.nick, percentageCountry.toFixed(2), 
         `${user.countryCode} Leaderboard Ranking`, 'Rating', '#cc302e'
+    );
+    createLinePlot(
+        "ratingsLinePlot", 
+        user.ratingPast14Days,
+        user.datesPast14Days, // it's a string? so it needs to be an array
+        `Rating Changes in the Last 14 Days`, 
+        'Date', 'Rating', '#cc302e'
+    );
+    createBarPlot(
+        "numGamesPlayedBarPlot", 
+        user.duelsTotalNumgamesplayedPast14DaysDifferences,
+        user.datesPast14Days, // it's a string? so it needs to be an array
+        `Number of Duels Played in the Last 14 Days`, 
+        'Date', 'Games Played', '#cc302e', '#FFFFFF'
     );
     createHistogram(
         "movingDuelsAvgGuessDistanceHistogram", Number(user.duelsAvgguessdistance), '',
@@ -335,6 +367,123 @@ function createHistogram(elementId, userMetric, lbPosition, allMetrics, userNick
                 size: 12
             }
         }]
+    };
+
+    Plotly.newPlot(elementId, [trace], layout);
+}
+
+function createLinePlot(elementId, allMetrics, userMetric, title, xaxisTitle, yaxisTitle, lineColor) {
+    // Parse the JSON strings to arrays
+    const xArray = JSON.parse(userMetric.replace(/'/g, '"'));
+    const yArray = JSON.parse(allMetrics.replace(/'/g, '"'));
+
+    // Create formatted dates for ticktext
+    const formattedDates = xArray.map(date => {
+        const [month, day, year] = date.split('-');
+        return `${month}-${day}`;
+    });
+
+    const trace = {
+        x: xArray,
+        y: yArray,
+        type: 'scatter',
+        mode: 'lines+markers+text',
+        text: yArray, // Add text labels
+        hovertemplate: '%{y}',
+        textposition: 'top center',
+        textfont: {
+            color: "#fecd19",
+        },
+        marker: {
+            size: 10,
+            color: lineColor,
+            line: {
+                color: '#FFFFFF',
+                width: 0.75
+            }
+        },
+        name: ''
+    };
+
+    const layout = {
+        title: title,
+        xaxis: {
+            title: xaxisTitle,
+            color: 'white',
+            type: 'category',
+            tickmode: 'array',
+            tickvals: xArray,
+            ticktext: formattedDates
+        },
+        yaxis: {
+            title: yaxisTitle,
+            color: 'white',
+            gridcolor: '#444444'
+        },
+        paper_bgcolor: '#1d1835', // Background color
+        plot_bgcolor: '#0f0a26', // Plot area background color
+        font: {
+            color: 'white'
+        }
+    };
+
+    Plotly.newPlot(elementId, [trace], layout);
+}
+
+function createBarPlot(elementId, allMetrics, userMetric, title, xaxisTitle, yaxisTitle, barColor, textColor) {
+    // Parse the JSON strings to arrays
+    const xArray = JSON.parse(userMetric.replace(/'/g, '"'));
+    const yArray = JSON.parse(allMetrics.replace(/'/g, '"'));
+
+    // calculate total number of games played (or yArray lol)
+    const sum = yArray.reduce((total, value) => total + value, 0)
+
+    // Create formatted dates for ticktext
+    const formattedDates = xArray.map(date => {
+        const [month, day, year] = date.split('-');
+        return `${month}-${day}`;
+    });
+
+    const trace = {
+        x: xArray,
+        y: yArray,
+        type: 'bar',
+        text: yArray,
+        hovertemplate: '%{y}<extra></extra>',
+        textposition: 'inside',
+        textfont: {
+            color: textColor,
+        },
+        marker: {
+            color: barColor,
+            line: { 
+                color: '#FFFFFF',
+                width: 1
+            }
+        },
+        name: '' // Remove the trace name
+    };
+
+    const layout = {
+        title: `${title} (Total ${sum})`,
+        xaxis: {
+            title: xaxisTitle,
+            color: 'white',
+            type: 'category',
+            tickmode: 'array',
+            tickvals: xArray, 
+            ticktext: formattedDates // Use the formatted dates for tick text
+        },
+        yaxis: {
+            title: yaxisTitle,
+            color: 'white',
+            gridcolor: '#444444'
+        },
+        paper_bgcolor: '#1d1835',
+        plot_bgcolor: '#0f0a26',
+        font: {
+            color: 'white'
+        }
     };
 
     Plotly.newPlot(elementId, [trace], layout);
