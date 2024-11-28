@@ -47,13 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Extract and clean up the 'current_time' value from the first data row
                         const firstRow = rows[0]; // First data row
                         const currentTimeValue = firstRow['current_time'].trim();
-    
-                        console.log(rows[0]);
-    
-                        // Calculate total number of players on leaderboard
                         const allDataLength = rows.length;
     
-                        // Create and insert <h2> element
                         var leaderboardContainer = document.getElementById("leaderboardContainer");
                         var h2 = document.createElement("h2");
                         h2.innerHTML = `
@@ -63,13 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         leaderboardContainer.appendChild(h2);
     
                         // Assuming selectedHeaders is defined and contains the headers you want to display
-                        rows.slice(1).forEach(row => {
+                        rows.forEach(row => {
                             const tr = document.createElement('tr');
                             selectedHeaders.forEach((header, i) => {
                                 const index = cleanHeaders.indexOf(header);
                                 if (index > -1) {
                                     const td = document.createElement('td');
-                                    if (i === 1) { // Assume the second column is 'Username'
+                                    if (i === 1) { // The second column is 'Username'
                                         const username = row[header];
                                         const link = document.createElement('a');
                                         link.href = `profile.html?username=${encodeURIComponent(username)}`;
