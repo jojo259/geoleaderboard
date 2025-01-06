@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const username = params.get('username');
+    const userId = params.get('id')
 
-    if (username) {
-        fetchCSVData(username);
+    if (username && userId) {
+        fetchCSVData(username, userId);
     }
 });
 
@@ -16,13 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function fetchCSVData(username) {
+function fetchCSVData(username, userId) {
     Papa.parse('leaderboard.csv', {
         download: true,
         header: true,
         complete: function(results) {
             console.log("CSV Data:", results.data); // Log the CSV data
-            const user = results.data.find(row => row.nick === username);
+            const user = results.data.find(row => row.nick === username && row.id === userId);
             if (user) {
                 displayProfile(user, results.data);
             } else {
